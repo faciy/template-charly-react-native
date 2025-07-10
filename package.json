@@ -1,0 +1,28 @@
+{
+  "name": "react-native-template-charlytemplate",
+  "version": "1.0.0",
+  "description": "Mon template React Native personnalisé",
+  "main": "template.config.js",
+  "bin": {
+    "create-montemplate": "./scripts/postInstall.js"
+  },
+  "scripts": {
+    "create": "node scripts/postInstall.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native",
+    "template",
+    "mobile"
+  ],
+  "author": "Charles Oth-niel",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/votrenom/react-native-template-montemplate"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "fs-extra": "^11.3.0"
+  }
+}
