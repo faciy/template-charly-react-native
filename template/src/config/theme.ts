@@ -3,7 +3,7 @@ import { Platform, useColorScheme } from 'react-native';
 export const app_colors = {
   dark: '#252525',
   greyLabel: '#898989',
-  primary: '#FEB800',
+  primary: '#000000',
   black: '#141414',
   red: '#FF5602',
   light: '#F0F0F0',

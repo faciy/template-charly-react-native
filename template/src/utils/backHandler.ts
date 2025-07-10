@@ -26,11 +26,10 @@ const handleFocusEffect = (navigation: any, currentRoute: any) => {
           isNavigationInProgress = true;
 
           setTimeout(() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: app_routes.first_screen }],
-            });
-            clearStorage(MMKV_Keys.connection_status);
+            // navigation.reset({
+            //   index: 0,
+            //   routes: [{ name: app_routes.first_screen }],
+            // });
           }, 100);
         },
       },
@@ -39,8 +38,8 @@ const handleFocusEffect = (navigation: any, currentRoute: any) => {
 
   // Définir les écrans où on veut intercepter le retour
   const screensThatShouldShowExitAlert = [
-    app_routes.home, // écran principal
-    app_routes.first_screen, // premier écran
+    app_routes.login, // écran principal
+    app_routes.splash, // premier écran
     // Ajoutez d'autres écrans selon vos besoins
   ];
 
@@ -68,7 +67,7 @@ const handleFocusEffect = (navigation: any, currentRoute: any) => {
     };
   } else if (Platform.OS === 'ios' && shouldInterceptBack) {
     // iOS : intercepter la navigation avec beforeRemove
-    const unsubscribe = navigation.addListener('beforeRemove', e => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
       // Si navigation déjà en cours, laisser passer
       if (isNavigationInProgress) {
         return;

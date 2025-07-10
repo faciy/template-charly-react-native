@@ -5,6 +5,7 @@ import {
 import { app_routes } from '../routes/routes';
 import SplashScreen from '@/screens/splash/SplashScreen';
 import LoginScreen from '@/screens/login/LoginScreen';
+import BottomNavigation from './BottomNavigation';
 
 const Stack = createStackNavigator();
 
