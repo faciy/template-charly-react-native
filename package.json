@@ -19,7 +19,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/votrenom/react-native-template-montemplate"
+    "url": "https://github.com/faciy/template-charly-react-native"
   },
   "dependencies": {
     "chalk": "^4.1.2",

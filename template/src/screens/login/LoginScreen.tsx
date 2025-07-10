@@ -50,7 +50,7 @@ const LoginScreen = () => {
           keyboardShouldPersistTaps="handled"
         >
           <View style={loginScreenStyles.formContainer}>
-            <Text style={loginScreenStyles.formTitle}>Connexion</Text>
+            <Text style={loginScreenStyles.formTitle}>Connexion {{PROJECT_NAME_LOWER}}</Text>
             <View style={loginScreenStyles.formInputContainer}>
               <Controller
                 control={control}
