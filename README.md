@@ -3,7 +3,7 @@
 ## Installation
 
 `bash ou Zsh`
-npx react-native-template-charlytemplate <Nom du projet>
+npx react-native-template-charlytemplate MonProjet
 
 Utilisation de plusieurs packages
 
