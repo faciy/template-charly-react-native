@@ -29,8 +29,9 @@ async function createProject() {
     // Remplacement des variables et noms dans les fichiers
     await replaceVariables(projectPath, projectName);
 
-    // Renommer le dossier iOS
+    // Renommer les éléments iOS
     await renameIOSFolder(projectPath, projectName);
+    await renameIOSProjectFiles(projectPath, projectName);
 
     // Renommer le namespace Android
     await renameAndroidPackage(projectPath, projectName);
@@ -47,7 +48,7 @@ async function createProject() {
   }
 }
 
-// 🔁 Remplacement des variables et noms dans tous les fichiers
+// 🔁 Remplacement des noms dans les fichiers
 async function replaceVariables(projectPath, projectName) {
   const replacements = {
     '{{PROJECT_NAME}}': projectName,
@@ -65,18 +66,15 @@ async function replaceVariables(projectPath, projectName) {
   for (const file of files) {
     if (shouldProcessFile(file)) {
       let content = await fs.readFile(file, 'utf8');
-
       for (const [key, value] of Object.entries(replacements)) {
-        const pattern = new RegExp(key, 'g');
-        content = content.replace(pattern, value);
+        content = content.replace(new RegExp(key, 'g'), value);
       }
-
       await fs.writeFile(file, content);
     }
   }
 }
 
-// 📱 Renommer le dossier iOS
+// 📁 Renommer le dossier iOS
 async function renameIOSFolder(projectPath, projectName) {
   const iosDir = path.join(projectPath, 'ios');
   const oldIOSPath = path.join(iosDir, 'AwesomeProject');
@@ -88,7 +86,28 @@ async function renameIOSFolder(projectPath, projectName) {
   }
 }
 
-// 🤖 Renommer le package Android
+// 📄 Renommer les fichiers iOS liés au nom du projet
+async function renameIOSProjectFiles(projectPath, projectName) {
+  const iosPath = path.join(projectPath, 'ios');
+
+  const renames = [
+    ['AwesomeProject.xcodeproj', `${projectName}.xcodeproj`],
+    ['AwesomeProject.xcworkspace', `${projectName}.xcworkspace`],
+    ['AwesomeProject.xcscheme', `${projectName}.xcscheme`],
+  ];
+
+  for (const [oldName, newName] of renames) {
+    const oldPath = path.join(iosPath, oldName);
+    const newPath = path.join(iosPath, newName);
+
+    if (await fs.pathExists(oldPath)) {
+      await fs.move(oldPath, newPath);
+      console.log(chalk.green(`📄 Renommé : ${oldName} ➜ ${newName}`));
+    }
+  }
+}
+
+// 🤖 Renommer le namespace Android
 async function renameAndroidPackage(projectPath, projectName) {
   const oldPackage = 'awesomeproject';
   const newPackage = projectName.toLowerCase();
@@ -110,9 +129,7 @@ async function renameAndroidPackage(projectPath, projectName) {
     console.log(chalk.green(`📁 Package Android renommé → com.${newPackage}`));
   }
 
-  const javaFiles = await getFiles(
-    path.join(projectPath, 'android', 'app', 'src')
-  );
+  const javaFiles = await getFiles(path.join(projectPath, 'android', 'app', 'src'));
   for (const file of javaFiles) {
     if (file.endsWith('.java') || file.endsWith('.kt')) {
       let content = await fs.readFile(file, 'utf8');
@@ -125,14 +142,14 @@ async function renameAndroidPackage(projectPath, projectName) {
   }
 }
 
-// 🧠 CamelCase utilitaire
+// 🧠 CamelCase
 function toCamelCase(str) {
   return str
     .replace(/[-_](.)/g, (_, c) => c.toUpperCase())
     .replace(/^(.)/, (c) => c.toLowerCase());
 }
 
-// 🔍 Parcourir récursivement tous les fichiers
+// 📂 Récupérer tous les fichiers
 async function getFiles(dir) {
   const files = [];
   const items = await fs.readdir(dir);
@@ -148,14 +165,13 @@ async function getFiles(dir) {
   return files;
 }
 
-// 🧾 Types de fichiers à traiter
+// 🎯 Fichiers à traiter
 function shouldProcessFile(filePath) {
   const ext = path.extname(filePath);
   const filename = path.basename(filePath);
 
   const processableExtensions = [
-    '', // fichiers sans extension comme Podfile
-    '.js', '.ts', '.tsx', '.json', '.xml', '.java', '.kt', '.swift',
+    '', '.js', '.ts', '.tsx', '.json', '.xml', '.java', '.kt', '.swift',
     '.h', '.m', '.mm', '.pbxproj', '.plist',
     '.xcscheme', '.xcworkspacedata', '.storyboard', '.gradle'
   ];
@@ -171,5 +187,5 @@ function shouldProcessFile(filePath) {
   return processableExtensions.includes(ext) || importantFiles.includes(filename);
 }
 
-// 🚀 Lancer le script
+// ▶️ Lancer le script
 createProject();
