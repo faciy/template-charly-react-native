@@ -29,12 +29,11 @@ async function createProject() {
     // Remplacement des variables et noms dans les fichiers
     await replaceVariables(projectPath, projectName);
 
-    // Renommer les éléments iOS
+    // Renommages spécifiques à iOS et Android
     await renameIOSFolder(projectPath, projectName);
-    await renameIOSProjectFiles(projectPath, projectName);
-
-    // Renommer le namespace Android
     await renameAndroidPackage(projectPath, projectName);
+    await renameIOSProjectFiles(projectPath, projectName);
+    await renameXCScheme(projectPath, projectName);
 
     console.log(chalk.green('✅ Projet généré avec succès !'));
     console.log(chalk.yellow('\n📌 Étapes suivantes :'));
@@ -48,7 +47,7 @@ async function createProject() {
   }
 }
 
-// 🔁 Remplacement des noms dans les fichiers
+// 🔁 Remplacement des variables et noms dans tous les fichiers
 async function replaceVariables(projectPath, projectName) {
   const replacements = {
     '{{PROJECT_NAME}}': projectName,
@@ -66,9 +65,12 @@ async function replaceVariables(projectPath, projectName) {
   for (const file of files) {
     if (shouldProcessFile(file)) {
       let content = await fs.readFile(file, 'utf8');
+
       for (const [key, value] of Object.entries(replacements)) {
-        content = content.replace(new RegExp(key, 'g'), value);
+        const pattern = new RegExp(key, 'g');
+        content = content.replace(pattern, value);
       }
+
       await fs.writeFile(file, content);
     }
   }
@@ -86,28 +88,7 @@ async function renameIOSFolder(projectPath, projectName) {
   }
 }
 
-// 📄 Renommer les fichiers iOS liés au nom du projet
-async function renameIOSProjectFiles(projectPath, projectName) {
-  const iosPath = path.join(projectPath, 'ios');
-
-  const renames = [
-    ['AwesomeProject.xcodeproj', `${projectName}.xcodeproj`],
-    ['AwesomeProject.xcworkspace', `${projectName}.xcworkspace`],
-    ['AwesomeProject.xcscheme', `${projectName}.xcscheme`],
-  ];
-
-  for (const [oldName, newName] of renames) {
-    const oldPath = path.join(iosPath, oldName);
-    const newPath = path.join(iosPath, newName);
-
-    if (await fs.pathExists(oldPath)) {
-      await fs.move(oldPath, newPath);
-      console.log(chalk.green(`📄 Renommé : ${oldName} ➜ ${newName}`));
-    }
-  }
-}
-
-// 🤖 Renommer le namespace Android
+// 📦 Renommer le package Android
 async function renameAndroidPackage(projectPath, projectName) {
   const oldPackage = 'awesomeproject';
   const newPackage = projectName.toLowerCase();
@@ -133,23 +114,63 @@ async function renameAndroidPackage(projectPath, projectName) {
   for (const file of javaFiles) {
     if (file.endsWith('.java') || file.endsWith('.kt')) {
       let content = await fs.readFile(file, 'utf8');
-      content = content.replace(
-        new RegExp(`com\\.${oldPackage}`, 'g'),
-        `com.${newPackage}`
-      );
+      content = content.replace(new RegExp(`com\\.${oldPackage}`, 'g'), `com.${newPackage}`);
       await fs.writeFile(file, content);
     }
   }
 }
 
-// 🧠 CamelCase
+// 📂 Renommer les fichiers iOS comme .xcodeproj, .xcworkspace, etc.
+async function renameIOSProjectFiles(projectPath, projectName) {
+  const iosDir = path.join(projectPath, 'ios');
+  const renames = [
+    { from: 'AwesomeProject.xcodeproj', to: `${projectName}.xcodeproj` },
+    { from: 'AwesomeProject.xcworkspace', to: `${projectName}.xcworkspace` }
+  ];
+
+  for (const { from, to } of renames) {
+    const oldPath = path.join(iosDir, from);
+    const newPath = path.join(iosDir, to);
+    if (await fs.pathExists(oldPath)) {
+      await fs.move(oldPath, newPath);
+      console.log(chalk.green(`📁 ${from} renommé → ${to}`));
+    }
+  }
+}
+
+// 📄 Renommer les fichiers .xcscheme et remplacer leur contenu
+async function renameXCScheme(projectPath, projectName) {
+  const iosDir = path.join(projectPath, 'ios');
+  const xcodeprojName = `${projectName}.xcodeproj`;
+  const schemesDir = path.join(iosDir, xcodeprojName, 'xcshareddata', 'xcschemes');
+
+  if (!await fs.pathExists(schemesDir)) return;
+
+  const files = await fs.readdir(schemesDir);
+  for (const file of files) {
+    if (file.endsWith('.xcscheme') && file.includes('AwesomeProject')) {
+      const oldPath = path.join(schemesDir, file);
+      const newPath = path.join(schemesDir, `${projectName}.xcscheme`);
+
+      await fs.move(oldPath, newPath);
+      console.log(chalk.green(`📄 Fichier xcscheme renommé → ${projectName}.xcscheme`));
+
+      let content = await fs.readFile(newPath, 'utf8');
+      content = content.replace(/AwesomeProject/g, projectName);
+      content = content.replace(/awesomeproject/g, projectName.toLowerCase());
+      await fs.writeFile(newPath, content);
+    }
+  }
+}
+
+// 🧠 CamelCase utilitaire
 function toCamelCase(str) {
   return str
     .replace(/[-_](.)/g, (_, c) => c.toUpperCase())
     .replace(/^(.)/, (c) => c.toLowerCase());
 }
 
-// 📂 Récupérer tous les fichiers
+// 🔍 Parcourir récursivement tous les fichiers
 async function getFiles(dir) {
   const files = [];
   const items = await fs.readdir(dir);
@@ -165,15 +186,14 @@ async function getFiles(dir) {
   return files;
 }
 
-// 🎯 Fichiers à traiter
+// 🎯 Extensions de fichiers à traiter
 function shouldProcessFile(filePath) {
   const ext = path.extname(filePath);
   const filename = path.basename(filePath);
 
   const processableExtensions = [
     '', '.js', '.ts', '.tsx', '.json', '.xml', '.java', '.kt', '.swift',
-    '.h', '.m', '.mm', '.pbxproj', '.plist',
-    '.xcscheme', '.xcworkspacedata', '.storyboard', '.gradle'
+    '.h', '.m', '.mm', '.pbxproj', '.plist', '.xcscheme', '.xcworkspacedata', '.storyboard', '.gradle'
   ];
 
   const importantFiles = [
@@ -181,11 +201,11 @@ function shouldProcessFile(filePath) {
     'settings.gradle',
     'project.pbxproj',
     'contents.xcworkspacedata',
-    'LaunchScreen.storyboard',
+    'LaunchScreen.storyboard'
   ];
 
   return processableExtensions.includes(ext) || importantFiles.includes(filename);
 }
 
-// ▶️ Lancer le script
+// 🚀 Lancer le script
 createProject();
