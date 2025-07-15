@@ -1,6 +1,6 @@
 {
   "name": "react-native-template-charlytemplate",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Mon template React Native personnalisé",
   "main": "template.config.js",
   "bin": {

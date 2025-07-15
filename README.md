@@ -46,3 +46,6 @@ Pour les reponsivites des ecrans
 
 Pour la responsivite des polices et autres
 -Utilisation du package react-native-responsive-screen
+
+Pour la gestion du cache 
+-Utilisation de tanstack/react-query
