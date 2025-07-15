@@ -10,10 +10,13 @@ import Navigation from '@/navigations/Navigation';
 import MyToast from '@/components/toast/MyToast';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './config/queryClient';
 
 function App() {
   // const isDarkTheme = useColorScheme() === 'dark';
   return (
+    <QueryClientProvider client={queryClient}>
     <Provider store={store}>
       <StatusBar
         translucent
@@ -23,6 +26,7 @@ function App() {
       <Navigation />
       <MyToast />
     </Provider>
+    </QueryClientProvider>
   );
 }
 

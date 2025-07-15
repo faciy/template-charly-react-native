@@ -83,32 +83,6 @@ export const app_font_size = {
 };
 
 
-
-// export const app_font_family = Platform.select({
-//   ios: {
-//     InterBlack: 'Inter 18pt Black',
-//     InterBold: 'Inter 18pt Bold',
-//     InterLight: 'Inter 18pt Light',
-//     InterMedium: 'Inter 18pt Medium',
-//     InterRegular: 'Inter 18pt Regular',
-//     PoppinsBold: 'Poppins Bold',
-//     PoppinsLight: 'Poppins Light',
-//     PoppinsMedium: 'Poppins Medium',
-//     PoppinsRegular: 'Poppins Regular',
-//   },
-//   android: {
-//     InterBlack: 'Inter_18pt-Black',
-//     InterBold: 'Inter_18pt-Bold',
-//     InterLight: 'Inter_18pt-Light',
-//     InterMedium: 'Inter_18pt-Medium',
-//     InterRegular: 'Inter_18pt-Regular',
-//     PoppinsBold: 'Poppins-Bold',
-//     PoppinsLight: 'Poppins-Light',
-//     PoppinsMedium: 'Poppins-Medium',
-//     PoppinsRegular: 'Poppins-Regular',
-//   },
-// });
-
 export const app_font_family = {
   PoppinsBlack: 'Poppins-Black',
   PoppinsBold: 'Poppins-Bold',
