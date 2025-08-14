@@ -9,7 +9,7 @@ Utilisation de plusieurs packages
 
 Pour les formualaires
 
-- Utilisation dde React Hook form
+- Utilisation de React Hook form
 - Utlisation de Yup pour la validation des formulaires
 
 Pour le management
@@ -42,10 +42,10 @@ Pour la navigation
 * Les Satcks et les Bottom Navigation
 
 Pour les reponsivites des ecrans
--Utiliser dd'un fichier device.proprieties dans configs
+-Utilisation d'un fichier device.proprieties dans configs
 
 Pour la responsivite des polices et autres
 -Utilisation du package react-native-responsive-screen
 
-Pour la gestion du cache 
+Pour la gestion du cache lors des appels API
 -Utilisation de tanstack/react-query
