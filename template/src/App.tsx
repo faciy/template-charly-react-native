@@ -16,17 +16,17 @@ import { queryClient } from './config/queryClient';
 function App() {
   // const isDarkTheme = useColorScheme() === 'dark';
   return (
-    <QueryClientProvider client={queryClient}>
     <Provider store={store}>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="dark-content"
-      />
-      <Navigation />
-      <MyToast />
+      <QueryClientProvider client={queryClient}>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <Navigation />
+        <MyToast />
+      </QueryClientProvider>
     </Provider>
-    </QueryClientProvider>
   );
 }
 
