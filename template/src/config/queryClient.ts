@@ -4,7 +4,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // Nombre de tentatives en cas d'échec
-      retry: 2,
+      retry: 1,
       
       // Temps avant que les données soient considérées comme périmées
       staleTime: 5 * 60 * 1000, // 5 minutes
@@ -12,8 +12,8 @@ export const queryClient = new QueryClient({
       // Temps de conservation en cache
       gcTime: 10 * 60 * 1000, // 10 minutes (anciennement cacheTime)
       
-      // Désactiver le refetch automatique quand la fenêtre reprend le focus
-      refetchOnWindowFocus: false,
+      // Activer le refetch automatique quand la fenêtre reprend le focus
+      refetchOnWindowFocus: true,
       
       // Désactiver le refetch automatique lors de la reconnexion
       refetchOnReconnect: true,

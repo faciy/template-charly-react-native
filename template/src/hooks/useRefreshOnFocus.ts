@@ -1,6 +1,7 @@
+import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
-import React = require('react');
+
 
 export const useRefreshOnFocus = (queryKey: string[]) => {
   const queryClient = useQueryClient();

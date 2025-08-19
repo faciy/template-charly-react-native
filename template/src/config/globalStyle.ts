@@ -82,7 +82,7 @@ export const GlobalStyle = StyleSheet.create({
     color: Colors.gray,
   },
   InputErrorLabel: {
-    ...this.InputLabel,
+    // ...this.InputLabel,
     color: Colors.danger,
     // marginLeft: normalize(10)
   },
